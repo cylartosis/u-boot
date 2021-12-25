@@ -90,9 +90,12 @@ static void _mtk_serial_setbrg(struct mtk_serial_priv *priv, int baud,
 			       uint clk_rate)
 {
 	u32 quot, realbaud, samplecount = 1;
+	bool hs3 = false;
 
 	/* Special case for low baud clock */
 	if (baud <= 115200 && clk_rate == 12000000) {
+		hs3 = true;
+
 		writel(3, &priv->regs->highspeed);
 
 		quot = DIV_ROUND_CLOSEST(clk_rate, 256 * baud);
@@ -126,6 +129,8 @@ static void _mtk_serial_setbrg(struct mtk_serial_priv *priv, int baud,
 		quot = DIV_ROUND_UP(clk_rate, 4 * baud);
 	} else {
 use_hs3:
+		hs3 = true;
+
 		writel(3, &priv->regs->highspeed);
 
 		quot = DIV_ROUND_UP(clk_rate, 256 * baud);
@@ -139,9 +144,11 @@ set_baud:
 	writel((quot >> 8) & 0xff, &priv->regs->dlm);
 	writel(UART_LCR_WLS_8, &priv->regs->lcr);
 
-	/* set highspeed mode sample count & point */
-	writel(samplecount - 1, &priv->regs->sample_count);
-	writel((samplecount - 2) >> 1, &priv->regs->sample_point);
+	if (hs3) {
+		/* set highspeed mode sample count & point */
+		writel(samplecount - 1, &priv->regs->sample_count);
+		writel((samplecount - 2) >> 1, &priv->regs->sample_point);
+	}
 }
 
 static int _mtk_serial_putc(struct mtk_serial_priv *priv, const char ch)
