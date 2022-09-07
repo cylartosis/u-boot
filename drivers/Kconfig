@@ -92,6 +92,8 @@ source "drivers/phy/socionext/Kconfig"
 
 source "drivers/pinctrl/Kconfig"
 
+source "drivers/pwrap/Kconfig"
+
 source "drivers/power/Kconfig"
 
 source "drivers/pwm/Kconfig"
