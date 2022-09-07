@@ -36,6 +36,7 @@ obj-$(CONFIG_$(SPL_)SYSINFO) += sysinfo/
 obj-$(CONFIG_$(SPL_TPL_)TPM) += tpm/
 obj-$(CONFIG_XEN) += xen/
 obj-$(CONFIG_$(SPL_)FPGA) += fpga/
+obj-$(CONFIG_PWRAP) += pwrap/
 
 ifndef CONFIG_TPL_BUILD
 ifndef CONFIG_VPL_BUILD
