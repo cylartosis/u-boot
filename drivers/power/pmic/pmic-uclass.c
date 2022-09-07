@@ -135,6 +135,20 @@ int pmic_write(struct udevice *dev, uint reg, const uint8_t *buffer, int len)
 	return ops->write(dev, reg, buffer, len);
 }
 
+int pmic_read_u32(struct udevice *dev, u32 reg, u32 *val)
+{
+	const struct dm_pmic_ops *ops = dev_get_driver_ops(dev);
+
+	return ops->read_u32(dev, reg, val);
+}
+
+int pmic_write_u32(struct udevice *dev, u32 reg, u32 val)
+{
+	const struct dm_pmic_ops *ops = dev_get_driver_ops(dev);
+
+	return ops->write_u32(dev, reg, val);
+}
+
 int pmic_reg_read(struct udevice *dev, uint reg)
 {
 	struct uc_pmic_priv *priv = dev_get_uclass_priv(dev);
@@ -145,7 +159,6 @@ int pmic_reg_read(struct udevice *dev, uint reg)
 		debug("Wrong transmission size [%d]\n", priv->trans_len);
 		return -EINVAL;
 	}
-
 	debug("%s: reg=%x priv->trans_len:%d", __func__, reg, priv->trans_len);
 	ret = pmic_read(dev, reg, (uint8_t *)&val, priv->trans_len);
 	debug(", value=%x, ret=%d\n", val, ret);
@@ -166,6 +179,7 @@ int pmic_reg_write(struct udevice *dev, uint reg, uint value)
 	debug("%s: reg=%x, value=%x priv->trans_len:%d", __func__, reg, value,
 	      priv->trans_len);
 	ret = pmic_write(dev, reg, (uint8_t *)&value, priv->trans_len);
+
 	debug(", ret=%d\n", ret);
 
 	return ret;
@@ -174,6 +188,7 @@ int pmic_reg_write(struct udevice *dev, uint reg, uint value)
 int pmic_clrsetbits(struct udevice *dev, uint reg, uint clr, uint set)
 {
 	struct uc_pmic_priv *priv = dev_get_uclass_priv(dev);
+	const struct dm_pmic_ops *ops = dev_get_driver_ops(dev);
 	u32 val = 0;
 	int ret;
 
@@ -182,12 +197,19 @@ int pmic_clrsetbits(struct udevice *dev, uint reg, uint clr, uint set)
 		return -EINVAL;
 	}
 
-	ret = pmic_read(dev, reg, (uint8_t *)&val, priv->trans_len);
+	if (ops->read_u32)
+		ret = pmic_read_u32(dev, reg, &val);
+	else
+		ret = pmic_read(dev, reg, (uint8_t *)&val, priv->trans_len);
+
 	if (ret < 0)
 		return ret;
 
 	val = (val & ~clr) | set;
-	return pmic_write(dev, reg, (uint8_t *)&val, priv->trans_len);
+	if (ops->write_u32)
+		return pmic_write_u32(dev, reg, val);
+	else
+		return pmic_write(dev, reg, (uint8_t *)&val, priv->trans_len);
 }
 
 static int pmic_pre_probe(struct udevice *dev)
