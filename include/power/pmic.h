@@ -166,6 +166,8 @@ struct dm_pmic_ops {
 	int (*read)(struct udevice *dev, uint reg, uint8_t *buffer, int len);
 	int (*write)(struct udevice *dev, uint reg, const uint8_t *buffer,
 		     int len);
+	int (*read_u32)(struct udevice *dev, u32 reg, u32 *val);
+	int (*write_u32)(struct udevice *dev, u32 reg, u32 val);
 };
 
 /**
@@ -265,6 +267,19 @@ int pmic_reg_count(struct udevice *dev);
  */
 int pmic_read(struct udevice *dev, uint reg, uint8_t *buffer, int len);
 int pmic_write(struct udevice *dev, uint reg, const uint8_t *buffer, int len);
+
+/**
+ * pmic_read/write_u32: 32-bit read/write to the UCLASS_PMIC device
+ *
+ * The required pmic device can be obtained by 'pmic_get()'
+ *
+ * @pmic   - pointer to the UCLASS_PMIC device
+ * @reg    - device register offset
+ * @val    - pointer to read buffer/value to write
+ * Return: 0 on success or negative value of errno.
+ */
+int pmic_read_u32(struct udevice *dev, u32 reg, u32 *val);
+int pmic_write_u32(struct udevice *dev, u32 reg, u32 val);
 
 /**
  * pmic_reg_read() - read a PMIC register value
