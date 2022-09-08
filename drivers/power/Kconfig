@@ -430,6 +430,12 @@ config PALMAS_POWER
 	bool "Palmas power support"
 	depends on OMAP54XX
 
+config POWER_MT6328
+	bool "Poweroff driver for MediaTek MT6328"
+	select CMD_POWEROFF
+	help
+	  This adds poweroff driver for the MT6328 PMIC.
+
 config POWER_I2C
 	bool "I2C-based power control for legacy power"
 	depends on POWER_LEGACY
