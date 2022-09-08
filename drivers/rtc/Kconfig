@@ -231,6 +231,12 @@ config RTC_M41T62
 	  Enable driver for ST's M41T62 compatible RTC devices (like RV-4162).
 	  It is a serial (I2C) real-time clock (RTC) with alarm.
 
+config RTC_MT6328
+	bool "Enable MT6328 driver"
+	help
+	  Enable driver for MT6328 PMIC's RTC device.
+	  It is a PMIC real-time clock (RTC) with alarm.
+
 config RTC_STM32
 	bool "Enable STM32 RTC driver"
 	depends on DM_RTC
