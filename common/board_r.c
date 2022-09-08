@@ -113,6 +113,7 @@ static int initr_caches(void)
 	enable_caches();
 	return 0;
 }
+
 #endif
 
 __weak int fixup_cpu(void)
@@ -727,7 +728,7 @@ static init_fnc_t init_sequence_r[] = {
 #ifdef CONFIG_API
 	api_init,
 #endif
-	console_init_r,		/* fully init console as a device */
+//	console_init_r,		/* fully init console as a device */
 #ifdef CONFIG_DISPLAY_BOARDINFO_LATE
 	console_announce_r,
 	show_board_info,
