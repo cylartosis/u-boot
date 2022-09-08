@@ -156,6 +156,11 @@ static const struct pwm_ops mtk_pwm_ops = {
 	.set_enable	= mtk_pwm_set_enable,
 };
 
+static const struct mtk_pwm_soc mt6735_data = {
+	.num_pwms = 7,
+	.pwm45_fixup = true,
+};
+
 static const struct mtk_pwm_soc mt7622_data = {
 	.num_pwms = 6,
 	.pwm45_fixup = false,
@@ -172,6 +177,7 @@ static const struct mtk_pwm_soc mt7629_data = {
 };
 
 static const struct udevice_id mtk_pwm_ids[] = {
+	{ .compatible = "mediatek,mt6735-pwm", .data = (ulong)&mt6735_data },
 	{ .compatible = "mediatek,mt7622-pwm", .data = (ulong)&mt7622_data },
 	{ .compatible = "mediatek,mt7623-pwm", .data = (ulong)&mt7623_data },
 	{ .compatible = "mediatek,mt7629-pwm", .data = (ulong)&mt7629_data },
