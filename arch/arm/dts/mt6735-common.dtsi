@@ -1,0 +1,470 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright (C) 2018 MediaTek Inc.
+ * Author: Ryder Lee <ryder.lee@mediatek.com>
+ */
+
+/dts-v1/;
+#include "mt6735.dtsi"
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	chosen {
+		stdout-path = &uart0;
+	};
+};
+
+&pwrap {
+	status = "okay";
+
+	mt6328: pmic {
+		compatible = "mediatek,mt6328";
+		interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+
+		interrupt-controller;
+		#interrupt-cells = <2>;
+
+		regulators {
+			vcore1: buck_vcore1 {
+				regulator-name = "buck_vcore1";
+				regulator-always-on;
+				regulator-min-microvolt = <600000>;
+				regulator-max-microvolt = <1393750>;
+			};
+
+			vproc: buck_vproc {
+				regulator-name = "buck_vproc";
+				regulator-always-on;
+				regulator-min-microvolt = <600000>;
+				regulator-max-microvolt = <1393750>;
+			};
+
+			vlte: buck_vlte {
+				regulator-name = "buck_vlte";
+				regulator-always-on;
+				regulator-min-microvolt = <600000>;
+				regulator-max-microvolt = <1393750>;
+			};
+
+			vsys22: buck_vsys22 {
+				regulator-name = "buck_vsys22";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1993750>;
+				regulator-ramp-delay = <6250>;
+				regulator-enable-ramp-delay = <180>;
+				regulator-always-on;
+				regulator-boot-on;
+			};
+
+			vpa: buck_vpa {
+				regulator-name = "buck_vpa";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <3650000>;
+				regulator-ramp-delay = <50000>;
+				regulator-enable-ramp-delay = <180>;
+			};
+
+			vsram: ldo_vsram {
+				regulator-name = "vsram";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1493750>;
+				regulator-enable-ramp-delay = <220>;
+				regulator-ramp-delay = <6250>;
+				regulator-boot-on;
+			};
+
+			vaux18: ldo_vaux18 {
+				regulator-name = "ldo_vaux18";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vtcxo_0: ldo_vtcxo_0 {
+				regulator-name = "ldo_vtcxo_0";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <110>;
+				regulator-boot-on;
+			};
+
+			vtcxo_1: ldo_vtcxo_1 {
+				regulator-name = "ldo_vtcxo_1";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <110>;
+			};
+
+			vaud28: ldo_vaud28 {
+				regulator-name = "ldo_vaud28";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vcn28: ldo_vcn28 {
+				regulator-name = "ldo_vcn28";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vcama: ldo_vcama {
+				regulator-name = "ldo_vcama";
+				regulator-min-microvolt = <1500000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vcn33_bt: ldo_vcn33_bt {
+				regulator-name = "ldo_vcn33_bt";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3600000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vcn33_wifi: ldo_vcn33_wifi {
+				regulator-name = "ldo_vcn33_wifi";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3600000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vusb33: ldo_vusb33 {
+				regulator-name = "ldo_vusb33";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vefuse: ldo_vefuse {
+				regulator-name = "ldo_vefuse";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <2200000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			sim1: ldo_vsim1 {
+				regulator-name = "ldo_vsim1";
+				regulator-min-microvolt = <1700000>;
+				regulator-max-microvolt = <2100000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			sim2: ldo_vsim2 {
+				regulator-name = "ldo_vsim2";
+				regulator-min-microvolt = <1700000>;
+				regulator-max-microvolt = <2100000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vemc_3v3: ldo_vemc3v3 {
+				regulator-name = "ldo_vemc3v3";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vmch: ldo_vmch {
+				regulator-name = "ldo_vmch";
+				regulator-min-microvolt = <2900000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <44>;
+			};
+
+			vtref: ldo_vtref {
+				regulator-name = "ldo_vtref";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <240>;
+			};
+
+			vmc: ldo_vmc {
+				regulator-name = "ldo_vmc";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <44>;
+			};
+
+			vcamaf: ldo_vcamaf {
+				regulator-name = "ldo_vcamaf";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vio28: ldo_vio28 {
+				regulator-name = "ldo_vio28";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vrtc: ldo_vrtc {
+				regulator-name = "ldo_vrtc";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vgp1: ldo_vgp1 {
+				regulator-name = "ldo_vgp1";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vibr: ldo_vibr {
+				regulator-name = "ldo_vibr";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <44>;
+			};
+
+			vcamd: ldo_vcamd {
+				regulator-name = "ldo_vcamd";
+				regulator-min-microvolt = <900000>;
+				regulator-max-microvolt = <1500000>;
+				regulator-enable-ramp-delay = <264>;
+			};
+
+			vrf18_0: ldo_vrf18_0 {
+				regulator-name = "ldo_vrf18_0";
+				regulator-min-microvolt = <1825000>;
+				regulator-max-microvolt = <1825000>;
+				regulator-enable-ramp-delay = <220>;
+			};
+
+			vrf18_1: ldo_vrf18_1 {
+				regulator-name = "ldo_vrf18_1";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1825000>;
+				regulator-enable-ramp-delay = <220>;
+			};
+
+			vio18: ldo_vio18 {
+				regulator-name = "ldo_vio18";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+
+			vcn18: ldo_vcn18 {
+				regulator-name = "ldo_vcn18";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <44>;
+			};
+
+			vcamio: ldo_vcamio {
+				regulator-name = "ldo_vcamio";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <220>;
+			};
+
+			vm: ldo_vm {
+				regulator-name = "ldo_vm";
+				regulator-min-microvolt = <1240000>;
+				regulator-max-microvolt = <1540000>;
+				regulator-enable-ramp-delay = <264>;
+				regulator-boot-on;
+			};
+		};
+
+		mt6328_keys: mt6328_keys{
+			compatible = "mediatek,mtk-pwrkey";
+			#gpio-cells = <2>;
+			gpio-controller;
+		};
+	};
+};
+
+&mmc0 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins_default>;
+
+	vmmc-supply = <&vemc_3v3>;
+	vqmmc-supply = <&vio18>;
+
+	bus-width = <8>;
+	max-frequency = <200000000>;
+	cap-mmc-highspeed;
+	cap-mmc-hw-reset;
+	mmc-hs400-1_8v;
+	non-removable;
+};
+
+&mmc1 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc1_pins_default>;
+
+	vmmc-supply = <&vmch>;
+	vqmmc-supply = <&vmc>;
+
+	bus-width = <4>;
+	max-frequency = <200000000>;
+	cap-sd-highspeed;
+	sd-uhs-sdr104;
+};
+
+&pinctrl {
+	mmc0_pins_default: mmc0default {
+		mux {
+			function = "msdc";
+			groups =  "msdc0";
+		};
+
+		conf-cmd-data {
+			pins = "MSDC0_CMD", "MSDC0_D0", "MSDC0_D1",
+			       "MSDC0_D2", "MSDC0_D3", "MSDC0_D4",
+			       "MSDC0_D5", "MSDC0_D6", "MSDC0_D7";
+			input-enable;
+			bias-pull-up;
+		};
+
+		conf-clk {
+			pins = "MSDC0_CLK";
+			bias-pull-down;
+		};
+
+		conf-ds {
+			pins = "MSDC0_DSL";
+			bias-pull-down;
+		};
+
+		conf-rst {
+			pins = "MSDC0_RSTB";
+			bias-pull-up;
+		};
+	};
+
+	mmc1_pins_default: mmc1default {
+		mux {
+			function = "msdc";
+			groups =  "msdc1";
+		};
+
+		conf-cmd-data {
+			pins = "MSDC1_DAT0", "MSDC1_DAT1", "MSDC1_DAT2",
+			       "MSDC1_DAT3", "MSDC1_CMD";
+			input-enable;
+			bias-pull-up;
+		};
+
+		conf-clk {
+			pins = "MSDC1_CLK";
+			bias-pull-down;
+		};
+
+	};
+
+	uart0_pins_a: uart0-default {
+		mux {
+			function = "uart";
+			groups =  "uart0_2_txd_rxd";
+		};
+	};
+
+	uart1_pins_a: uart1-default {
+		mux {
+			function = "uart";
+			groups =  "uart1_1_txd_rxd";
+		};
+	};
+
+	uart2_pins_a: uart2-default {
+		mux {
+			function = "uart";
+			groups =  "uart2_1_txd_rxd";
+		};
+	};
+
+	uart3_pins_a: uart3-default {
+		mux {
+			function = "uart";
+			groups =  "uart3_1_txd_rxd";
+		};
+	};
+
+	usb_pins_a: usb-default {
+		mux {
+			function = "usb";
+			groups = "usb";
+		};
+
+		conf-host {
+			pins = "IDDIG", "USB_DRVVBUS";
+			input-enable;
+			bias-pull-up;
+		};
+	};
+
+	usb_pins_b: usb-otg {
+		mux {
+			function = "usb";
+			groups = "usb";
+		};
+
+		conf-otg {
+			pins = "IDDIG", "USB_DRVVBUS";
+			input-enable;
+			bias-pull-down;
+		};
+	};
+};
+
+&uart0 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins_a>;
+};
+
+&uart1 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pins_a>;
+};
+
+&uart2 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pins_a>;
+};
+
+&watchdog {
+	status = "okay";
+};
+
+&usb0 {
+	status = "okay";
+
+	vbus-supply = <&vusb33>;
+
+	pinctrl-names = "default", "otg";
+	pinctrl-0 = <&usb_pins_a>;
+	pinctrl-1 = <&usb_pins_b>;
+
+	dr_mode = "host";
+
+	usb_con_c: connector {
+		compatible = "usb-c-connector";
+		label = "USB-C";
+	};
+};

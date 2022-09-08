@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Common device tree for testing. Should work with
+ * most MT6735 devices to some extent.
+ */
+
+/dts-v1/;
+#include "mt6735-common.dtsi"
+
+/ {
+	model = "MediaTek MT6735 Device";
+	compatible = "mediatek,test", "mediatek,mt6735";
+
+	memory {
+		/*
+		 * 1 GiB is likely the minimum on all MT6735 devices
+		 * so should be safe to use.
+		 */
+		device_type = "memory";
+		reg = <0x40000000 0x40000000>;
+	};
+};
