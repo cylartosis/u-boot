@@ -99,6 +99,17 @@ config DM_REGULATOR_DA9063
 	  regulators. It also implements the get/set api for current for the
 	  buck regulators.
 
+
+config DM_REGULATOR_MT6328
+	bool "Enable Driver Model for REGULATOR MT6328"
+	depends on DM_REGULATOR && PMIC_MT6328
+	---help---
+	  This config enables implementation of driver-model regulator uclass
+	  features for REGULATOR MT6328.
+	  The driver implements get/set api for value, enable and mode for all
+	  regulators. It also implements the get/set api for current for the
+	  buck regulators.
+
 config SPL_DM_REGULATOR_DA9063
 	bool "Enable Driver Model for REGULATOR DA9063 in SPL"
 	depends on DM_REGULATOR && DM_PMIC_DA9063  && SPL
