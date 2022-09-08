@@ -17,12 +17,14 @@
 #include <linux/err.h>
 #include <linux/iopoll.h>
 
+#include <dt-bindings/power/mt6735-power.h>
 #include <dt-bindings/power/mt7623-power.h>
 #include <dt-bindings/power/mt7629-power.h>
 
 #define SPM_EN			(0xb16 << 16 | 0x1)
 #define SPM_VDE_PWR_CON		0x0210
 #define SPM_MFG_PWR_CON		0x0214
+#define SPM_VEN_PWR_CON		0x0230
 #define SPM_ISP_PWR_CON		0x0238
 #define SPM_DIS_PWR_CON		0x023c
 #define SPM_CONN_PWR_CON	0x0280
@@ -42,6 +44,8 @@
 #define PWR_ON_2ND_BIT		BIT(3)
 #define PWR_CLK_DIS_BIT		BIT(4)
 
+
+#define PWR_STATUS_MD1		BIT(0)
 #define PWR_STATUS_CONN		BIT(1)
 #define PWR_STATUS_DISP		BIT(3)
 #define PWR_STATUS_MFG		BIT(4)
@@ -51,9 +55,11 @@
 #define PWR_STATUS_ETH		BIT(15)
 #define PWR_STATUS_HIF		BIT(16)
 #define PWR_STATUS_IFR_MSC	BIT(17)
+#define PWR_STATUS_VENC		BIT(21)
 #define PWR_STATUS_ETHSYS	BIT(24)
 #define PWR_STATUS_HIF0		BIT(25)
 #define PWR_STATUS_HIF1		BIT(26)
+#define PWR_STATUS_MD2		BIT(22)
 
 /* Infrasys configuration */
 #define INFRA_TOPDCM_CTRL	0x10
@@ -63,6 +69,7 @@
 #define DCM_TOP_EN		BIT(0)
 
 enum scp_domain_type {
+	SCPSYS_MT6735,
 	SCPSYS_MT7622,
 	SCPSYS_MT7623,
 	SCPSYS_MT7629,
@@ -160,6 +167,58 @@ static struct scp_domain_data scp_domain_mt7629[] = {
 		.sram_pdn_bits = GENMASK(11, 8),
 		.sram_pdn_ack_bits = GENMASK(15, 12),
 		.bus_prot_mask = GENMASK(28, 26),
+	},
+};
+
+
+static struct scp_domain_data scp_domain_mt6735[] = {
+	[MT6735_POWER_DOMAIN_CONN] = {
+		.sta_mask = PWR_STATUS_CONN,
+		.ctl_offs = SPM_CONN_PWR_CON,
+		.sram_pdn_bits = GENMASK(8, 8),
+		.sram_pdn_ack_bits = 0,
+	},
+	[MT6735_POWER_DOMAIN_VENC] = {
+		.sta_mask = PWR_STATUS_VENC,
+		.ctl_offs = SPM_VEN_PWR_CON,
+		.sram_pdn_bits = GENMASK(11, 8),
+		.sram_pdn_ack_bits = GENMASK(15, 12),
+	},
+	[MT6735_POWER_DOMAIN_DISP] = {
+		.sta_mask = PWR_STATUS_DISP,
+		.ctl_offs = SPM_DIS_PWR_CON,
+		.sram_pdn_bits = GENMASK(11, 8),
+		.sram_pdn_ack_bits = GENMASK(12, 12),
+	},
+	[MT6735_POWER_DOMAIN_MFG] = {
+		.sta_mask = PWR_STATUS_MFG,
+		.ctl_offs = SPM_MFG_PWR_CON,
+		.sram_pdn_bits = GENMASK(11, 8),
+		.sram_pdn_ack_bits = GENMASK(12, 12),
+	},
+	[MT6735_POWER_DOMAIN_VDEC] = {
+		.sta_mask = PWR_STATUS_VDEC,
+		.ctl_offs = SPM_VDE_PWR_CON,
+		.sram_pdn_bits = GENMASK(11, 8),
+		.sram_pdn_ack_bits = GENMASK(12, 12),
+	},
+	[MT6735_POWER_DOMAIN_ISP] = {
+		.sta_mask = PWR_STATUS_ISP,
+		.ctl_offs = SPM_ISP_PWR_CON,
+		.sram_pdn_bits = GENMASK(11, 8),
+		.sram_pdn_ack_bits = GENMASK(13, 12),
+	},
+	[MT6735_POWER_DOMAIN_MD1] = {
+		.sta_mask = PWR_STATUS_MD1,
+		.ctl_offs = 0x0284,
+		.sram_pdn_bits = GENMASK(8, 8),
+		.sram_pdn_ack_bits = 0,
+	},
+	[MT6735_POWER_DOMAIN_MD2] = {
+		.sta_mask = PWR_STATUS_MD2,
+		.ctl_offs = 0x02d4,
+		.sram_pdn_bits = GENMASK(8, 8),
+		.sram_pdn_ack_bits = 0,
 	},
 };
 
@@ -324,6 +383,8 @@ static int mtk_power_domain_hook(struct udevice *dev)
 	scpd->type = (enum scp_domain_type)dev_get_driver_data(dev);
 
 	switch (scpd->type) {
+	case SCPSYS_MT6735:
+	scpd->data = scp_domain_mt6735;
 	case SCPSYS_MT7623:
 		scpd->data = scp_domain_mt7623;
 		break;
@@ -378,6 +439,10 @@ static int mtk_power_domain_probe(struct udevice *dev)
 }
 
 static const struct udevice_id mtk_power_domain_ids[] = {
+	{
+		.compatible = "mediatek,mt6735-scpsys",
+		.data = SCPSYS_MT6735,
+	},
 	{
 		.compatible = "mediatek,mt7622-scpsys",
 		.data = SCPSYS_MT7622,

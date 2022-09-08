@@ -426,6 +426,12 @@ config POWER_MT6323
 	  This adds poweroff driver for mt6323
 	  this pmic is used on mt7623 / Bananapi R2
 
+config POWER_MT6328
+	bool "Poweroff driver for MediaTek MT6328"
+	select CMD_POWEROFF
+	help
+	  This adds poweroff driver for the MT6328 PMIC.
+
 config PALMAS_POWER
 	bool "Palmas power support"
 	depends on OMAP54XX
