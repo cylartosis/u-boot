@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Minimal device tree for Samsung Galaxy Grand Prime+
+ *
+ * Copyright (c) 2022, Yassine Oudjana
+ */
+
+/dts-v1/;
+#include "mt6735-common.dtsi"
+
+/ {
+	model = "Samsung Galaxy Grand Prime+";
+	compatible = "samsung,grandpplte", "mediatek,mt6735";
+
+	memory {
+		device_type = "memory";
+		reg = <0x40000000 0x5f530000>;
+	};
+
+	vdd_tflash: regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_tflash";
+		regulator-min-microvolt = <3000000>;
+		regulator-max-microvolt = <3000000>;
+		regulator-allow-set-load;
+		startup-delay-us = <100>;
+		gpio = <&gpio 19 0>;
+		enable-active-high;
+	};
+};
+
+/* This device uses external pulls for MMC pins */
+&mmc0_pins_default {
+	conf-cmd-data {
+		/delete-property/ bias-pull-up;
+	};
+
+	conf-clk {
+		/delete-property/ bias-pull-down;
+	};
+
+	conf-ds {
+		/delete-property/ bias-pull-down;
+	};
+
+	conf-rst {
+		/delete-property/ bias-pull-up;
+	};
+};
+
+&mmc1_pins_default {
+	conf-cmd-data {
+		/delete-property/ bias-pull-up;
+	};
+
+	conf-clk {
+		/delete-property/ bias-pull-down;
+	};
+};
+
+&mmc1 {
+	vmmc-supply = <&vdd_tflash>;
+	vqmmc-supply = <&vdd_tflash>;
+};
+
+&vaux18 {
+	regulator-always-on;
+};
+
+&vio18 {
+	regulator-always-on;
+};
+
+&vm {
+	regulator-always-on;
+};
+
+&vsram {
+	regulator-always-on;
+};
