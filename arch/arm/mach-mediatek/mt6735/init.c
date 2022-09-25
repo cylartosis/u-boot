@@ -36,6 +36,21 @@
 #define WDOG_SWRST		0x10212014
 #define WDOG_SWRST_KEY		0x1209
 
+#define CPUX_BASE		0x10200670
+
+/* cpux mcusys wrapper */
+#define CPUX_CON_REG		0x0
+#define CPUX_IDX_REG		0x4
+
+/* cpux */
+#define CPUX_IDX_GLOBAL_CTRL	0x0
+#define CPUX_ENABLE		BIT(0)
+#define CPUX_CLK_DIV_MASK	GENMASK(10, 8)
+#define CPUX_CLK_DIV1		BIT(8)
+#define CPUX_CLK_DIV2		BIT(9)
+#define CPUX_CLK_DIV4		BIT(10)
+#define CPUX_IDX_GLOBAL_IRQ	0x30
+
 DECLARE_GLOBAL_DATA_PTR;
 
 static struct mm_region mt6735_mem_map[] = {
@@ -56,6 +71,31 @@ static struct mm_region mt6735_mem_map[] = {
 	}
 };
 struct mm_region *mem_map = mt6735_mem_map;
+
+int timer_init(void)
+{
+	u32 val;
+
+	/* Initialize CPUX timers */
+	/* Set DIV2 to achieve 13MHz clock */
+	writel(CPUX_IDX_GLOBAL_CTRL, CPUX_BASE + CPUX_IDX_REG);
+	val = readl(CPUX_BASE + CPUX_CON_REG);
+
+	val &= ~CPUX_CLK_DIV_MASK;
+	val |= CPUX_CLK_DIV2;
+
+	writel(CPUX_IDX_GLOBAL_CTRL, CPUX_BASE + CPUX_IDX_REG);
+	writel(val, CPUX_BASE + CPUX_CON_REG);
+
+	/* Enable all CPUX timers */
+	writel(CPUX_IDX_GLOBAL_CTRL, CPUX_BASE + CPUX_IDX_REG);
+	val = readl(CPUX_BASE + CPUX_CON_REG);
+
+	writel(CPUX_IDX_GLOBAL_CTRL, CPUX_BASE + CPUX_IDX_REG);
+	writel(val | CPUX_ENABLE, CPUX_BASE + CPUX_CON_REG);
+
+	return 0;
+}
 
 int mtk_pll_early_init(void)
 {
@@ -101,6 +141,10 @@ int mtk_soc_early_init(void)
 
 	/* initialize early clocks */
 	ret = mtk_pll_early_init();
+	if (ret)
+		return ret;
+
+	ret = timer_init();
 	if (ret)
 		return ret;
 
