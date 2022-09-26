@@ -69,8 +69,8 @@ static int env_ext4_save_buffer(env_t *env_new)
 	const char *ifname = env_ext4_get_intf();
 	const char *dev_and_part = env_ext4_get_dev_part();
 
-	part = blk_get_device_part_str(ifname, dev_and_part,
-				       &dev_desc, &info, 1);
+	part = part_get_info_by_dev_and_name_or_num(ifname, dev_and_part,
+						    &dev_desc, &info, 1);
 	if (part < 0)
 		return 1;
 
@@ -152,8 +152,8 @@ static int env_ext4_load(void)
 		scsi_scan(true);
 #endif
 
-	part = blk_get_device_part_str(ifname, dev_and_part,
-				       &dev_desc, &info, 1);
+	part = part_get_info_by_dev_and_name_or_num(ifname, dev_and_part,
+						    &dev_desc, &info, 1);
 	if (part < 0)
 		goto err_env_relocate;
 
